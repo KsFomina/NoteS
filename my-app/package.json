@@ -1,5 +1,6 @@
 {
   "name": "my-app",
+  "homepage": "https://KsFomina.github.io/NoteS",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -20,7 +21,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "homepage": "https://KsFomina.github.io/NoteS",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
