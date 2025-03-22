@@ -1,54 +1,42 @@
-import React, { useState, useEffect } from 'react';
-import NoteList from './Components/NoteList';
-import NoteEditor from './Components/NoteEditor';
-import NoteItem from './Components/NoteItem';
+import React from "react";
+import NoteItem from "./Components/NoteItem";
+import { FaPlus } from "react-icons/fa";
+import useNotes from "./Hook/useNotes"; 
 
 const App = () => {
-  const [notes, setNotes] = useState([]);
+  const { notes, addNote, updateNote, deleteNote } = useNotes();
 
-  useEffect(() => {
-    const savedNotes = JSON.parse(localStorage.getItem('notes')) || [];
-    if (savedNotes.length === 0) {
-      savedNotes.push({
-        id: 1,
-        title: 'Первая заметка',
-        content: 'Это моя первая заметка!',
-        color: '#ffffff',
-        fontFamily: 'Arial',
-        fontSize: '14px',
-        textColor: '#000000',
-      });
-    }
-    setNotes(savedNotes);
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('notes', JSON.stringify(notes));
-  }, [notes]);
-
-  const handleSaveNote = (note) => {
-    if (notes.find((n) => n.id === note.id)) {
-      setNotes(notes.map((n) => (n.id === note.id ? note : n)));
-    } else {
-      setNotes([...notes, note]);
-    }
-  };
-
-  const handleDeleteNote = (id) => {
-    setNotes(notes.filter((n) => n.id !== id));
-  };
+  const sortedNotes = [...notes].sort(
+    (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
+  );
 
   return (
-    <div>
+    <div style={{ padding: "20px" }}>
       <h1>Мои заметки</h1>
-      <NoteEditor onSave={handleSaveNote} />
-      <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-        {notes.map((note) => (
+      <button
+        onClick={addNote}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          marginBottom: "20px",
+          padding: "10px",
+          backgroundColor: "#007bff",
+          color: "white",
+          border: "none",
+          borderRadius: "8px",
+          cursor: "pointer",
+        }}
+      >
+        <FaPlus style={{ marginRight: "8px" }} /> Добавить заметку
+      </button>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+        {sortedNotes.map((note) => (
           <NoteItem
             key={note.id}
             note={note}
-            onSave={handleSaveNote} // Убедись, что onSave передаётся
-            onDelete={handleDeleteNote}
+            onSave={updateNote}
+            onDelete={deleteNote}
           />
         ))}
       </div>
